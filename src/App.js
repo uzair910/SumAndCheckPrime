@@ -1,23 +1,40 @@
-import logo from './logo.svg';
+import React, { useEffect, useState } from "react";
 import './App.css';
 
+
 function App() {
+
+  const [isActive, setIsActive] = useState(false);
+
+  const [value, setValue] = useState('');
+
+  function handleTextChange(text) {
+    setValue(text);
+
+    if (text !== '') {
+      setIsActive(true);
+    } else {
+      setIsActive(false);
+    }
+  }
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
+      <header>
         <p>
-          Edit <code>src/App.js</code> and save to reload.
+          Sum and Prime
         </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
       </header>
+      <body>
+        <div className="float-label">
+          <input type="email"
+            value={value}
+            onChange={(e) => handleTextChange(e.target.value)} />
+         
+          <label className={isActive ? "Active" : ""} htmlFor="email">
+            Enter a number
+          </label>
+        </div>
+      </body>
     </div>
   );
 }
