@@ -9,7 +9,16 @@ function App() {
   const [value, setValue] = useState('');
 
   function handleTextChange(text) {
-    setValue(text);
+    const re = /^[0-9\b]+$/;
+
+    // if value is not blank, then test the regex
+    if (re.test(text) || text === '') {
+      setValue(text);
+    }
+    // if (text === '' || re.test(text.target.value)) {
+    //    this.setState({value: text})
+    // }
+
 
     if (text !== '') {
       setIsActive(true);
@@ -26,10 +35,10 @@ function App() {
       </header>
       <body>
         <div className="float-label">
-          <input type="email"
+          <input type="text"
             value={value}
             onChange={(e) => handleTextChange(e.target.value)} />
-         
+
           <label className={isActive ? "Active" : ""} htmlFor="email">
             Enter a number
           </label>
