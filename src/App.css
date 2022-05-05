@@ -93,3 +93,26 @@
 .float-label .Active {
   transform: translate(0, 12px) scale(0.75);
 }
+
+.output {
+  margin-left: 3rem;
+  flex: 1;
+}
+
+button {
+  width: 200px;
+  height: 60px;
+  margin: 2em auto;
+  display: block;
+  background-color: tomato;
+  color: white;
+  box-shadow: none;
+  border: 2px solid #ffa494;
+  border-radius: 10px;
+  position: relative;
+  overflow: hidden;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
