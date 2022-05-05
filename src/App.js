@@ -1,4 +1,4 @@
-import axios from 'axios'
+// import axios from 'axios'
 import React, { useEffect, useState, useRef } from "react";
 import './App.css';
 
@@ -47,8 +47,8 @@ function App() {
   }
 
   function calculateSumAndCheckPrime(text) {
-    axios.get('https://localhost:44331/api/MyAPI?action=sumandcheck&numbers=13,12,22,5')
-    .then(response => console.log(response))
+    // axios.get('https://localhost:44331/api/MyAPI?action=sumandcheck&numbers=13,12,22,5')
+    // .then(response => console.log(response))
   }
   return (
     <div className="App" >
