@@ -4,10 +4,10 @@ import { ACTION_SUMANDCHECK, API_HOST } from './config';
 import React, { useState } from "react";
 import './App.css';
 
-
 function App() {
   const [outputText, setOutputText] = useState('Start entering numbers..');
   const [outputClassName, setoutputClassName] = useState('bg-info');
+
   function handleNumberSubmission(e) {
     // Maybe use regex to text string pattern.
     if (e.target.value !== '') {
@@ -27,8 +27,6 @@ function App() {
       }
     })
       .then(function (response) {
-        // 
-        // setOutputText('Sum: ${response.data.result}');
         setOutputText( `Sum:  ${response.data.result} , isPrime: ${response.data.isPrime}`)
         setoutputClassName('bg-success');
       })
