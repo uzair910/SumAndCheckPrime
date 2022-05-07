@@ -13,6 +13,7 @@ function App() {
     if (e.target.value !== '') {
       calculateSumAndCheckPrime(e.target.value);
     }else{
+      // there should be a proper way to set back to default state, investigate!
       setoutputClassName('bg-info');
       setOutputText('Start entering numbers..');
     }
