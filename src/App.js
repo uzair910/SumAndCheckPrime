@@ -1,20 +1,20 @@
-// import axios from 'axios'
-import React, { Component, useState, useRef } from "react";
+import axios from 'axios';
+import { ACTION_SUMANDCHECK, API_HOST } from './config';
+import React, { useState, useRef } from "react";
 import './App.css';
 import ReactTooltip from "react-tooltip";
 // import Tippy from "@tippy.js/react";
 // import "tippy.js/dist/tippy.css";
 
 function App() {
-
   // can we have one isActive for both text boxes?
   const [isActive, setIsActive] = useState(false);
   const [isEndpointActive, setIsEndpointActive] = useState(false);
   const [isPrimeButtonDisabled, setIsPrimeButtonDisabled] = useState(false);
   const [value, setValue] = useState('');
-  const [endpoint, setEndpoint] = useState('')
-  const [outputText, setOutputText] = useState('')
-  // const [numbers, setNumbers] = useState('')
+  const [endpoint, setEndpoint] = useState('');
+  const [outputText, setOutputText] = useState('Perform an action...');
+  // const [numbers, setNumbers] = useState('');
   const sNumbers = useRef('');
 
   function handleNumberSubmission(e) {
@@ -76,12 +76,24 @@ function App() {
     if (endpoint === '') {
       console.log("No Endpoint given");
     } else {
-
       // axios.get(endpoint + '?action=sumandcheck&numbers=' +  sNumbers.current)
       // .then(response => console.log(response))
+      axios.get(`${API_HOST}/MyAPI`, {
+        params: {
+          'action': ACTION_SUMANDCHECK,
+          'numbers': sNumbers.current
+        }
+      })
+        .then(function (response) {
+          console.info(response.data.result);
+        })
+        .catch(function (error) {
+          console.error(error);
+        })
+        .finally(function () {
+          // always executed
+        });
     }
-
-
   }
 
   return (
@@ -111,7 +123,7 @@ function App() {
         />
 
         <label className={isActive ? "Active" : ""} htmlFor="number">
-          Enter a number
+          Enter data like: 123 or 123, 451, 123
         </label>
       </div>
 
@@ -127,13 +139,16 @@ function App() {
           className={isPrimeButtonDisabled ? "Disabled" : ""}
           disabled={isPrimeButtonDisabled}>Check if Prime number</button>
         <ReactTooltip id='msgPrime' type='error'>
-          <span>Cannot Check for prime number is there are more than 1 numbers entered</span>
+          <span>Cannot Check for prime number if there are multple</span>
         </ReactTooltip>
-      </div>
-      <div>
-        <label
-          value={outputText}>output text
-        </label>
+        <button onClick={() => {
+          sNumbers.current = "";
+          console.log("Numbers cleared: " + sNumbers.current)
+        }}>Clear numbers</button>
+        <div>
+        </div>
+
+        <label>{outputText}</label>
       </div>
     </div>
   );
