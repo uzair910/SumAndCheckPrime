@@ -1,155 +1,54 @@
 import axios from 'axios';
+import 'bootstrap/dist/css/bootstrap.min.css'
 import { ACTION_SUMANDCHECK, API_HOST } from './config';
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import './App.css';
-import ReactTooltip from "react-tooltip";
-// import Tippy from "@tippy.js/react";
-// import "tippy.js/dist/tippy.css";
+
 
 function App() {
-  // can we have one isActive for both text boxes?
-  const [isActive, setIsActive] = useState(false);
-  const [isEndpointActive, setIsEndpointActive] = useState(false);
-  const [isPrimeButtonDisabled, setIsPrimeButtonDisabled] = useState(false);
-  const [value, setValue] = useState('');
-  const [endpoint, setEndpoint] = useState('');
-  const [outputText, setOutputText] = useState('Perform an action...');
-  // const [numbers, setNumbers] = useState('');
-  const sNumbers = useRef('');
-
+  const [outputText, setOutputText] = useState('Start entering numbers..');
+  const [outputClassName, setoutputClassName] = useState('bg-info');
   function handleNumberSubmission(e) {
-    if (e.target.value !== '' && (e.code === "Enter" || e.code === "NumpadEnter")) {
-      // concatenate to the numbers string
-      sNumbers.current = sNumbers.current + e.target.value + ",";
-
-      console.log("sNumbers: " + sNumbers.current + " Length: " + sNumbers.current.split(',').length);
-
-      // Disable CheckPrime button if numbers are more than 1.
-      CheckPrimeButton();
-      // clear the text in the field.
-      setValue("");
+    // Maybe use regex to text string pattern.
+    if (e.target.value !== '') {
+      calculateSumAndCheckPrime(e.target.value);
+    }else{
+      setoutputClassName('bg-info');
+      setOutputText('Start entering numbers..');
     }
   }
 
-  function CheckPrimeButton() {
-    setOutputText(sNumbers.current);
-    if (sNumbers.current.split(',').length === 2) {
-      setIsPrimeButtonDisabled(false);
-    } else {
-      setIsPrimeButtonDisabled(true);
-    }
-  }
-
-  function handleTextChange(text) {
-    const re = /^[0-9\b]+$/; // to allow just numeric values
-
-    // if value is not blank, then test the regex
-    if (re.test(text) || text === '') {
-      setValue(text);
-    }
-
-    if (text !== '') {
-      setIsActive(true);
-    } else {
-      setIsActive(false);
-    }
-  }
-
-  function handleEndpointTextChange(text) {
-    setEndpoint(text);
-    if (text !== '') {
-      setIsEndpointActive(true);
-    } else {
-      setIsEndpointActive(false);
-    }
-  }
-
-  function CheckPrime(text) {
-    console.log("CheckPrime, endpoint: " + endpoint);
-  }
-
-  function calculateSumAndCheckPrime(text) {
-    // lets remove the , at the end..
-    sNumbers.current = sNumbers.current.slice(0, -1);
-    console.log("sNumbers before sum: " + sNumbers.current);
-
-    if (endpoint === '') {
-      console.log("No Endpoint given");
-    } else {
-      // axios.get(endpoint + '?action=sumandcheck&numbers=' +  sNumbers.current)
-      // .then(response => console.log(response))
-      axios.get(`${API_HOST}/MyAPI`, {
-        params: {
-          'action': ACTION_SUMANDCHECK,
-          'numbers': sNumbers.current
-        }
+  function calculateSumAndCheckPrime(number) {
+    axios.get(`${API_HOST}/MyAPI`, {
+      params: {
+        'action': ACTION_SUMANDCHECK,
+        'numbers': number
+      }
+    })
+      .then(function (response) {
+        // 
+        // setOutputText('Sum: ${response.data.result}');
+        setOutputText( `Sum:  ${response.data.result} , isPrime: ${response.data.isPrime}`)
+        setoutputClassName('bg-success');
       })
-        .then(function (response) {
-          console.info(response.data.result);
-        })
-        .catch(function (error) {
-          console.error(error);
-        })
-        .finally(function () {
-          // always executed
-        });
-    }
+      .catch(function (error) {
+        setOutputText("Error when REST api is called");
+        setoutputClassName('bg-danger');
+      })
+      .finally(function () {
+        // always executed
+      });
   }
 
   return (
     <div className="App" >
-      <header>
-        <p>
-          Sum and Prime
-        </p>
-      </header>
-
-      <div className="float-label">
-        <div className="float-label">
-          <input type="text"
-            value={endpoint}
-            onChange={(e) => handleEndpointTextChange(e.target.value)}
-          />
-          <label className={isEndpointActive ? "Active" : ""} htmlFor="endpoint">
-            Endpoint goes here
-          </label>
-        </div>
+      <div className="form-floating mb-2 d-flex align-items-center">
+        <input type="email" className="form-control" id="floatingInputNumbers"
+          placeholder="1,3,6"
+          onChange={(e) => handleNumberSubmission(e)} />
+        <label htmlFor="floatingInputNumbers">Enter data like: 23 or 3,5,7</label>
       </div>
-      <div className="float-label">
-        <input type="text"
-          value={value}
-          onChange={(e) => handleTextChange(e.target.value)}
-          onKeyPress={(e) => handleNumberSubmission(e)}
-        />
-
-        <label className={isActive ? "Active" : ""} htmlFor="number">
-          Enter data like: 123 or 123, 451, 123
-        </label>
-      </div>
-
-      <div>
-        <button onClick={calculateSumAndCheckPrime}>Calculate sum</button>
-
-        <button
-          data-tip data-for='msgPrime'
-          onClick={CheckPrime}
-          onMouseLeave={() => {
-            console.log("mouse leave")
-          }}
-          className={isPrimeButtonDisabled ? "Disabled" : ""}
-          disabled={isPrimeButtonDisabled}>Check if Prime number</button>
-        <ReactTooltip id='msgPrime' type='error'>
-          <span>Cannot Check for prime number if there are multple</span>
-        </ReactTooltip>
-        <button onClick={() => {
-          sNumbers.current = "";
-          console.log("Numbers cleared: " + sNumbers.current)
-        }}>Clear numbers</button>
-        <div>
-        </div>
-
-        <label>{outputText}</label>
-      </div>
+      <span className={`placeholder col-12 ${outputClassName}`} > {outputText}</span>
     </div>
   );
 }
