@@ -23,11 +23,11 @@ function App() {
     axios.get(`${API_HOST}/MyAPI`, {
       params: {
         'action': ACTION_SUMANDCHECK,
-        'numbers': number
+        'sNumbers': number
       }
     })
       .then(function (response) {
-        if (response.data.result >= 0) {
+        if (response.data.result > -2147483648) {
           setOutputText(`Sum:  ${response.data.result} , isPrime: ${response.data.isPrime}`)
           setoutputClassName('bg-success');
         } else {
