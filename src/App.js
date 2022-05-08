@@ -7,6 +7,7 @@ import './App.css';
 function App() {
   const [outputText, setOutputText] = useState('Start entering numbers..');
   const [outputClassName, setoutputClassName] = useState('bg-info');
+  const [minIntegerValue] = useState(-2147483648);// If invalid string is parsed to server, it will return int.minvalue (-2147483648)
 
   function handleNumberSubmission(e) {
     // Maybe use regex to text string pattern.
@@ -27,21 +28,14 @@ function App() {
       }
     })
       .then(function (response) {
-        if (response.data.result > -2147483648) {
-          setOutputText(`Sum:  ${response.data.result} , isPrime: ${response.data.isPrime}`)
-          setoutputClassName('bg-success');
-        } else {
-          setOutputText("Invalid string format.");
-          setoutputClassName('bg-danger');
-        }
+        setOutputText(`${response.data.result >minIntegerValue ? "Sum: " + response.data.result + ", " + (response.data.result < 0 ? "Negative number cannot be prime" : "isPrime: " + response.data.isPrime)
+          : "Invalid string format."}`)
+        setoutputClassName(`${response.data.result > minIntegerValue ? "bg-success" : "bg-danger"}`);
       })
       .catch(function (error) {
         setOutputText("Error when REST api is called.");
         setoutputClassName('bg-danger');
       })
-      .finally(function () {
-        // always executed
-      });
   }
 
   return (
