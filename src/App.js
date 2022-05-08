@@ -12,7 +12,7 @@ function App() {
     // Maybe use regex to text string pattern.
     if (e.target.value !== '') {
       calculateSumAndCheckPrime(e.target.value);
-    }else{
+    } else {
       // there should be a proper way to set back to default state, investigate!
       setoutputClassName('bg-info');
       setOutputText('Start entering numbers..');
@@ -27,11 +27,16 @@ function App() {
       }
     })
       .then(function (response) {
-        setOutputText( `Sum:  ${response.data.result} , isPrime: ${response.data.isPrime}`)
-        setoutputClassName('bg-success');
+        if (response.data.result >= 0) {
+          setOutputText(`Sum:  ${response.data.result} , isPrime: ${response.data.isPrime}`)
+          setoutputClassName('bg-success');
+        } else {
+          setOutputText("Invalid string format.");
+          setoutputClassName('bg-danger');
+        }
       })
       .catch(function (error) {
-        setOutputText("Error when REST api is called");
+        setOutputText("Error when REST api is called.");
         setoutputClassName('bg-danger');
       })
       .finally(function () {
