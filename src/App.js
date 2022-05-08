@@ -7,14 +7,12 @@ import './App.css';
 function App() {
   const [outputText, setOutputText] = useState('Start entering numbers..');
   const [outputClassName, setoutputClassName] = useState('bg-info');
-  const [minIntegerValue] = useState(-2147483648);// If invalid string is parsed to server, it will return int.minvalue (-2147483648)
+  const [minIntegerValue] = useState(-2147483648);// If invalid string is parsed to server, the server will return int.minvalue (-2147483648)
 
   function handleNumberSubmission(e) {
-    // Maybe use regex to text string pattern.
     if (e.target.value !== '') {
       calculateSumAndCheckPrime(e.target.value);
     } else {
-      // there should be a proper way to set back to default state, investigate!
       setoutputClassName('bg-info');
       setOutputText('Start entering numbers..');
     }
@@ -28,7 +26,7 @@ function App() {
       }
     })
       .then(function (response) {
-        setOutputText(`${response.data.result >minIntegerValue ? "Sum: " + response.data.result + ", " + (response.data.result < 0 ? "Negative number cannot be prime" : "isPrime: " + response.data.isPrime)
+        setOutputText(`${response.data.result > minIntegerValue ? "Sum: " + response.data.result + ", " + (response.data.result < 0 ? "Negative number cannot be prime" : "isPrime: " + response.data.isPrime)
           : "Invalid string format."}`)
         setoutputClassName(`${response.data.result > minIntegerValue ? "bg-success" : "bg-danger"}`);
       })
